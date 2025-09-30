@@ -9,39 +9,37 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#161329] text-white py-16 px-4">
+    <footer className="bg-[#5D8374] text-white py-16 px-4">
       <div className="max-w-3xl mx-auto text-center">
         {/* Tagline */}
         <h2 className="text-2xl md:text-3xl font-semibold">
-          Publish your game <span className="text-cyan-400">in two clicks</span>
+          Bersama ibu <span className="text-white">Mulai Perubahan dari Rumah</span>
         </h2>
 
         {/* Description */}
-        <p className="mt-4 text-sm text-gray-300 leading-relaxed">
-          Games created with <span className="font-medium">GDevelop</span> run
-          anywhere and can be exported in a single click. On the web, as a
-          mobile app for iOS and Android, or publish on Steam, Facebook Gaming,
-          Itch.io, Newgrounds, the Microsoft Store, and more.
+        <p className="mt-4 text-sm text-white leading-relaxed">
+          Dengan langkah sederhana dari rumah, sampah bisa dikelola lebih baik.
+          Green Cycle hadir untuk memudahkan setiap ibu membuat dampak besar.
         </p>
 
         {/* Social / platform icons */}
         <div className="mt-8 flex justify-center gap-6 text-2xl">
-          <a href="#" className="hover:text-cyan-400 transition-colors">
+          <a href="#" className="hover:text-[#cae2d9] transition-colors">
             <FaTwitter />
           </a>
-          <a href="#" className="hover:text-cyan-400 transition-colors">
+          <a href="#" className="hover:text-[#cae2d9] transition-colors">
             <FaDiscord />
           </a>
-          <a href="#" className="hover:text-cyan-400 transition-colors">
+          <a href="#" className="hover:text-[#cae2d9] transition-colors">
             <FaYoutube />
           </a>
-          <a href="#" className="hover:text-cyan-400 transition-colors">
+          <a href="#" className="hover:text-[#cae2d9] transition-colors">
             <FaApple />
           </a>
-          <a href="#" className="hover:text-cyan-400 transition-colors">
+          <a href="#" className="hover:text-[#cae2d9] transition-colors">
             <FaAndroid />
           </a>
-          <a href="#" className="hover:text-cyan-400 transition-colors">
+          <a href="#" className="hover:text-[#cae2d9] transition-colors">
             <FaFacebook />
           </a>
         </div>
