@@ -2,13 +2,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { HiMenu, HiX } from "react-icons/hi"; // <-- pakai icon
+import { HiMenu, HiX } from "react-icons/hi";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // tutup menu tiap kali pindah halaman
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
