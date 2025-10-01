@@ -24,22 +24,16 @@ export default function Footer() {
 
         {/* Social / platform icons */}
         <div className="mt-8 flex justify-center gap-6 text-2xl">
-          <a href="#" className="hover:text-[#cae2d9] transition-colors">
+          <a href="https://x.com/" className="hover:text-[#cae2d9] transition-colors">
             <FaTwitter />
           </a>
-          <a href="#" className="hover:text-[#cae2d9] transition-colors">
+          <a href="https://discord.com/" className="hover:text-[#cae2d9] transition-colors">
             <FaDiscord />
           </a>
-          <a href="#" className="hover:text-[#cae2d9] transition-colors">
+          <a href="https://www.youtube.com/" className="hover:text-[#cae2d9] transition-colors">
             <FaYoutube />
           </a>
-          <a href="#" className="hover:text-[#cae2d9] transition-colors">
-            <FaApple />
-          </a>
-          <a href="#" className="hover:text-[#cae2d9] transition-colors">
-            <FaAndroid />
-          </a>
-          <a href="#" className="hover:text-[#cae2d9] transition-colors">
+          <a href="http://facebook.com/" className="hover:text-[#cae2d9] transition-colors">
             <FaFacebook />
           </a>
         </div>

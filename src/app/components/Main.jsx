@@ -10,7 +10,6 @@ function Main() {
       "
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid md:grid-cols-2 gap-12 items-center">
-        {/* LEFT: copy + CTAs */}
         <div>
           <p className="text-[11px] tracking-[0.2em] uppercase text-green-700/70">
             Ibu Jadi Kunci Rumah Bersih, Lingkungan Sehat
