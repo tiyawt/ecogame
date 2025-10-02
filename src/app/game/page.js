@@ -26,10 +26,10 @@ export default function Game() {
 
         {screen === "splash" && (
           <div className="absolute inset-0 flex flex-col justify-center items-center pb-12 z-10">
-            <h1 className="text-3xl font-extrabold text-white drop-shadow mb-6">
+            <h1 className="text-3xl font-extrabold text-white drop-shadow md:mb-6 mb-3">
               <SplitText
-                text="Hello, GSAP!"
-                className="text-2xl font-semibold text-center pixel"
+                text="WELCOME!"
+                className="text-4xl md:text-6xl font-semibold text-center pixel text-black"
                 delay={100}
                 duration={0.6}
                 ease="power3.out"
@@ -45,9 +45,9 @@ export default function Game() {
             <TargetCursor spinDuration={2} hideDefaultCursor={true} />
             <button
               onClick={() => setScreen("dialogue")}
-              className="cursor-target pixel pixel-btn yellow cursor-pointer select-none mt-5"
+              className="cursor-target pixel pixel-btn yellow cursor-pointer select-none mt-2"
             >
-              Mulai Percakapan
+              Ayo Mainkan
             </button>
           </div>
         )}
