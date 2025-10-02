@@ -162,7 +162,7 @@ export default function Transaction({ tx }) {
                 onClick={() => router.push("/wastebank/detail/sent")}
                 className="inline-flex w-full md:flex-1 items-center justify-center
                rounded-xl border border-slate-200 px-4 py-2
-               text-sm text-slate-700 hover:bg-slate-50"
+               text-sm text-white cursor-pointer bg-yellow-500 hover:bg-yellow-600"
               >
                 Ubah Pengiriman
               </button>
@@ -171,13 +171,13 @@ export default function Transaction({ tx }) {
                 onClick={() =>
                   alert(
                     resi
-                      ? `Tracking ${courier.label} untuk resi ${resi} (dummy)`
+                      ? `Tracking ${courier.label} untuk resi ${resi}`
                       : "Isi nomor resi dulu ya."
                   )
                 }
                 className="inline-flex w-full md:flex-1 items-center justify-center
                rounded-xl bg-cyan-500 text-white px-4 py-2
-               text-sm font-semibold hover:bg-cyan-600"
+               text-sm font-semibold hover:bg-cyan-600 cursor-pointer"
               >
                 Lacak Pengiriman
               </button>
@@ -234,13 +234,13 @@ export default function Transaction({ tx }) {
           <div className="mt-3 flex gap-2">
             <button
               onClick={copyAllAddresses}
-              className="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+              className="cursor-pointer inline-flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-1.5 text-sm bg-yellow-500 text-white hover:bg-yellow-600"
             >
               <Clipboard className="h-4 w-4" /> Salin Alamat
             </button>
             <button
               onClick={share}
-              className="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+              className="cursor-pointer inline-flex items-center gap-1 rounded-xl border border-slate-200 px-7 py-1.5 text-sm bg-cyan-500 text-white hover:bg-cyan-600"
             >
               <Share2 className="h-4 w-4" /> Bagikan
             </button>

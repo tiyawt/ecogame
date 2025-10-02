@@ -78,7 +78,6 @@ export default function SentPage() {
   const router = useRouter();
   const {
     senderName,
-    senderNote,
     userLoc,
     address,
     selectedFacility,
@@ -92,8 +91,6 @@ export default function SentPage() {
     if (!selectedFacility) router.replace("/wastebank");
   }, [selectedFacility, router]);
   if (!selectedFacility) return null;
-
-  const [noteLen, setNoteLen] = useState(senderNote?.length || 0);
 
   const [selfDropoff, setSelfDropoff] = useState(false);
   const [openChoose, setOpenChoose] = useState(false);
@@ -129,7 +126,7 @@ export default function SentPage() {
     }
 
     const tx = {
-      sender: { name: senderName, note: senderNote, address, loc: userLoc },
+      sender: { name: senderName, address, loc: userLoc },
       receiver: {
         id: selectedFacility.id,
         name: selectedFacility.name,
@@ -169,26 +166,6 @@ export default function SentPage() {
           <p className="text-sm text-slate-700">
             {address || "Alamat belum diatur"}
           </p>
-        </div>
-
-        <div className="mt-2">
-          <input
-            type="text"
-            maxLength={50}
-            value={senderNote}
-            onChange={(e) => {
-              setSenderNote(e.target.value);
-              setNoteLen(e.target.value.length);
-            }}
-            placeholder="Tambahkan keterangan alamat (opsional)"
-            className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
-          />
-          <div className="mt-1 flex items-center justify-between">
-            <p className="text-xs text-slate-500">
-              Pastikan alamat kamu sudah sesuai ya
-            </p>
-            <span className="text-[11px] text-slate-400">{noteLen}/50</span>
-          </div>
         </div>
       </section>
 
@@ -275,7 +252,7 @@ export default function SentPage() {
       <div className="pt-2">
         <button
           onClick={handleConfirm}
-          className="w-full rounded-xl bg-emerald-600 text-white px-4 py-3 text-sm font-semibold hover:bg-emerald-700"
+          className="w-full rounded-xl bg-emerald-600 text-white px-4 py-3 text-sm font-semibold hover:bg-emerald-700 cursor-pointer"
         >
           Konfirmasi & Lanjut
         </button>

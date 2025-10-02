@@ -34,6 +34,38 @@ const BG_BY_ID = {
   red: "bg-rose-200   hover:bg-rose-300    text-rose-900",
 };
 
+const BIN_TIPS = {
+  green: {
+    title: "🟢 Tong Hijau — Organik",
+    desc: "Sisa makanan & bahan alami yang cepat terurai. Ideal buat kompos. Hindari campur plastik/kaca/logam.",
+    tone: "green",
+  },
+  yellow: {
+    title: "🟡 Tong Kuning — Daur Ulang (Plastik/Kertas/Kain)",
+    desc: "Plastik, kertas, kain yang masih layak proses ulang. Wajib dibilas/bersih biar gak kontaminasi.",
+    tone: "yellow",
+  },
+  blue: {
+    title: "🔵 Tong Biru — Logam & Kaca",
+    desc: "Kaleng, besi ringan, botol/toples kaca. Bersihkan dulu; bahan ini dilebur/diolah ulang.",
+    tone: "sky",
+  },
+  red: {
+    title: "🔴 Tong Merah — B3/Residu Berbahaya",
+    desc: "Baterai, obat, elektronik, popok, oli, lampu. Butuh penanganan khusus—jangan campur dengan lain.",
+    tone: "rose",
+  },
+};
+
+const TIP_STYLE = {
+  green:
+    "bg-emerald-50 border-emerald-200 text-emerald-800 [&_strong]:text-emerald-900",
+  yellow:
+    "bg-yellow-50 border-yellow-200 text-yellow-900 [&_strong]:text-yellow-900",
+  sky: "bg-sky-50 border-sky-200 text-sky-800 [&_strong]:text-sky-900",
+  rose: "bg-rose-50 border-rose-200 text-rose-800 [&_strong]:text-rose-900",
+};
+
 const FILTERS = [
   { id: "all", label: "Semua" },
   { id: "green", label: "Hijau" },
@@ -125,26 +157,39 @@ export default function Hint({ onClose }) {
             </div>
           </div>
 
-          {/* DETAIL CARD DESKTOP */}
+          {/* DESKTOP */}
           <div className="hidden md:block w-[260px] shrink-0">
-            {selected && <DetailCard item={selected} />}
+            {selected && <DetailCard item={selected} activeFilter={filter} />}
           </div>
         </div>
 
-        {/* DETAIL CARD MOBILE */}
+        {/* MOBILE */}
         <div className="md:hidden mt-3">
-          {selected && <DetailCard item={selected} />}
+          {selected && <DetailCard item={selected} activeFilter={filter} />}
         </div>
       </div>
     </div>
   );
 }
 
-function DetailCard({ item }) {
+function DetailCard({ item, activeFilter }) {
+  const effectiveCat = activeFilter !== "all" ? activeFilter : item.category;
   const info = CAT_INFO[item.category];
+  const tip = BIN_TIPS[effectiveCat];
+
   return (
     <div className="rounded-xl sm:rounded-2xl bg-white border-2 sm:border-4 border-yellow-400 p-3 sm:p-4">
-      <div className="flex items-center gap-3">
+      {tip && (
+        <div
+          className={`mt-2 sm:mt-3 rounded-lg border p-2 sm:p-2.5 text-[11px] sm:text-xs ${
+            TIP_STYLE[tip.tone]
+          }`}
+        >
+          <strong className="block mb-0.5">{tip.title}</strong>
+          <span className="opacity-90">{tip.desc}</span>
+        </div>
+      )}
+      <div className="flex items-center gap-3 mt-5">
         <div className="w-12 sm:w-16 h-12 sm:h-16 grid place-items-center rounded-lg sm:rounded-xl bg-green-200 border">
           <img
             src={item.image}

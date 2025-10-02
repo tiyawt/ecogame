@@ -35,7 +35,7 @@ export default function ListByStatus({
 
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-600">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-600 mb-30">
         {emptyText}
       </div>
     );
