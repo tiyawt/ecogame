@@ -5,8 +5,8 @@ import { Crosshair, Copy, Loader2 } from "lucide-react";
 import MapLeaflet from "./MapLeaflet";
 import SearchBox from "./SearchBox";
 import FacilityList from "./FacilityList";
-import { useGeocodeFacilities } from "@/app/hooks/useGeocodeFacilities";
-import { useReverseGeocode } from "@/app/hooks/useReverseGeocode";
+import { useGeocodeFacilities } from "@/hooks/useGeocodeFacilities";
+import { useReverseGeocode } from "@/hooks/useReverseGeocode";
 import { useWasteStore } from "@/store/wasteBankStore";
 
 const INITIAL = { lat: -6.889, lon: 107.641 };
