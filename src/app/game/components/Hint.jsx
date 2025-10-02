@@ -26,6 +26,14 @@ const CAT_INFO = {
   },
 };
 
+const BG_BY_ID = {
+  all: "bg-white/80 hover:bg-white text-stone-900", // “Semua”
+  green: "bg-emerald-200 hover:bg-emerald-300 text-emerald-900",
+  yellow: "bg-yellow-200  hover:bg-yellow-300  text-yellow-900",
+  blue: "bg-sky-200    hover:bg-sky-300     text-sky-900",
+  red: "bg-rose-200   hover:bg-rose-300    text-rose-900",
+};
+
 const FILTERS = [
   { id: "all", label: "Semua" },
   { id: "green", label: "Hijau" },
@@ -49,68 +57,65 @@ export default function Hint({ onClose }) {
   useMemo(() => {
     if (!list.find((x) => x.id === selected?.id))
       setSelected(list[0] ?? trashData[0]);
-  }, [filter]); 
+  }, [filter]);
 
   return (
-    <div className="mx-auto w-[92vw] max-w-[1000px] mt-6">
-      <button
-        onClick={onClose}
-        aria-label="Tutup Hints"
-        className="absolute -top-[-3] -right-42 w-9 h-9 rounded-full bg-white
-                   shadow ring-1 ring-black/10 hover:bg-zinc-50"
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        className="w-[90vw] max-w-[900px] max-h-[85vh] overflow-auto
+               rounded-2xl pixel pixel-background blue border shadow-xl
+               p-3 sm:p-4 md:p-6"
       >
-        ✕
-      </button>
-      <div className="rounded-t-3xl bg-[#f2c4c6] text-center py-3 tracking-widest text-stone-700 font-bold shadow">
-        HINTS
-      </div>
+        <h1 className="text-base sm:text-lg md:text-xl mb-3 text-center">
+          HINTS
+        </h1>
 
-      <div className="rounded-b-3xl bg-[#FAF7EF] border border-[#e8e2cf] shadow-xl p-4 md:p-6">
-        <div className="flex gap-4">
+        <div className="flex gap-3 sm:gap-4">
+          {/* FILTER BUTTONS */}
           <div className="hidden md:flex md:flex-col gap-2">
             {FILTERS.map((f) => (
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id)}
-                className={`px-4 py-2 rounded-full text-sm border
-                  ${
-                    filter === f.id
-                      ? "bg-white shadow font-semibold"
-                      : "bg-[#f4efdf] hover:bg-white"
-                  }`}
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm border transition
+              ${
+                filter === f.id
+                  ? "bg-white shadow font-semibold text-stone-900"
+                  : BG_BY_ID[f.id] || BG_BY_ID.all
+              }`}
               >
                 {f.label}
               </button>
             ))}
           </div>
 
+          {/* GRID LIST */}
           <div className="flex-1">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pr-1 md:pr-4 max-h-[320px] overflow-y-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 pr-1 md:pr-4 max-h-[300px] sm:max-h-[320px] overflow-y-auto">
               {list.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setSelected(item)}
-                  className={`group rounded-xl border bg-white/90 p-3 text-left transition
-                    ${
-                      selected?.id === item.id
-                        ? "ring-2 ring-emerald-400 border-emerald-200"
-                        : "hover:shadow"
-                    }`}
+                  className={`group rounded-lg sm:rounded-xl border bg-white p-2 sm:p-3 text-left transition
+                ${
+                  selected?.id === item.id
+                    ? "ring-2 ring-yellow-400 border-4 border-yellow-200"
+                    : "hover:shadow"
+                }`}
                 >
                   <div className="w-full aspect-square grid place-items-center">
-                  
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="max-h-20 object-contain"
+                      className="max-h-14 sm:max-h-20 object-contain"
                     />
                   </div>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-stone-700 truncate">
+                    <span className="text-[10px] sm:text-xs font-semibold text-stone-700 truncate">
                       {item.name}
                     </span>
                     <span
-                      className={`inline-block w-3 h-3 rounded-full ${
+                      className={`inline-block w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full ${
                         CAT_INFO[item.category].chip
                       }`}
                     />
@@ -120,11 +125,14 @@ export default function Hint({ onClose }) {
             </div>
           </div>
 
-          <div className="hidden md:block w-[300px] shrink-0">
+          {/* DETAIL CARD DESKTOP */}
+          <div className="hidden md:block w-[260px] shrink-0">
             {selected && <DetailCard item={selected} />}
           </div>
         </div>
-        <div className="md:hidden mt-4">
+
+        {/* DETAIL CARD MOBILE */}
+        <div className="md:hidden mt-3">
           {selected && <DetailCard item={selected} />}
         </div>
       </div>
@@ -135,28 +143,31 @@ export default function Hint({ onClose }) {
 function DetailCard({ item }) {
   const info = CAT_INFO[item.category];
   return (
-    <div className="rounded-2xl bg-white/90 border border-[#e8e2cf] p-4">
+    <div className="rounded-xl sm:rounded-2xl bg-white border-2 sm:border-4 border-yellow-400 p-3 sm:p-4">
       <div className="flex items-center gap-3">
-        <div className="w-16 h-16 grid place-items-center rounded-xl bg-[#f7f3e6] border">
+        <div className="w-12 sm:w-16 h-12 sm:h-16 grid place-items-center rounded-lg sm:rounded-xl bg-green-200 border">
           <img
             src={item.image}
             alt={item.name}
-            className="max-h-12 object-contain"
+            className="max-h-10 sm:max-h-12 object-contain"
           />
         </div>
         <div>
-          <div className="text-stone-800 font-bold">{item.name}</div>
-          <div className="text-xs text-stone-500 flex items-center gap-2">
+          <div className="text-stone-800 font-semibold sm:font-bold text-sm sm:text-base">
+            {item.name}
+          </div>
+          <div className="text-[10px] sm:text-xs text-stone-500 flex items-center gap-1.5 sm:gap-2">
             <span
-              className={`inline-block w-2.5 h-2.5 rounded-full ${info.chip}`}
+              className={`inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${info.chip}`}
             />
             {info.label}
           </div>
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-stone-700">{item.reason}</p>
+      <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-stone-700 leading-snug">
+        {item.reason}
+      </p>
     </div>
   );
 }
-

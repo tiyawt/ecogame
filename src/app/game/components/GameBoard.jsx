@@ -62,11 +62,8 @@ export default function GameBoard() {
   const {
     openShare,
     setOpenShare,
-    sharing,
-    sharePayload,
     setSharePayload,
     openShareSheet,
-    shareSystem,
     shareTwitter,
     shareWhatsApp,
     shareTelegram,
@@ -80,6 +77,18 @@ export default function GameBoard() {
     setResetSalt(salt);
     safeSave(GAME_KEY, { day: dayStr, trash: init, resetSalt: salt });
   }, []);
+
+  const handleToolbarShare = () => {
+    const pageUrl = window.location.href;
+    const payload = {
+      line1: `Aku sudah konsisten memilah & membuang sampah ${streak} hari beruntun di GreenCycle.`,
+      combined: `Aku sudah konsisten memilah & membuang sampah ${streak} hari beruntun di GreenCycle.\n\n${pageUrl}`,
+      tweet: `Aku sudah konsisten memilah & membuang sampah ${streak} hari beruntun di GreenCycle.`,
+      pageUrl,
+    };
+    setSharePayload(payload);
+    setOpenShare(true);
+  };
 
   useEffect(() => {
     const d = ymd();
@@ -187,40 +196,51 @@ export default function GameBoard() {
         draggable={false}
       />
 
-      <div className="absolute left-4 top-4 z-20 flex flex-col gap-3">
-        <button
-          onClick={() => setOpenHints((v) => !v)}
-          aria-label="Buka Hints"
-          className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-100 border border-amber-300 text-stone-700 shadow hover:bg-amber-200 active:scale-95 transition"
-        >
-          <List className="w-5 h-5" />
-        </button>
-        <button
-          onClick={openShareSheet}
-          className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-100 border border-amber-300 text-stone-700 shadow hover:bg-amber-200 active:scale-95 transition"
-        >
-          <Share2 />
-        </button>
-
-        <button
-          onClick={() => setSoundOn((v) => !v)}
-          aria-label="Toggle sound"
-          className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-700 shadow hover:bg-emerald-200 active:scale-95 transition"
-          title={soundOn ? "Sound ON" : "Sound OFF"}
-        >
-          {soundOn ? "🔊" : "🔇"}
-        </button>
-      </div>
-
       <div className="absolute inset-0 z-10 flex flex-col items-center gap-3">
-        <div className="mt-2 flex items-center gap-3 rounded px-3 py-1 text-white">
-          <span className="pixel">🔥 Streak: {streak}</span>
-          <button
-            onClick={resetAll}
-            className="pixel pixel-btn yellow rounded bg-white/20 px-2 py-0.5 text-xs hover:bg-white/30"
-          >
-            Reset
-          </button>
+        <div className="mt-2 w-full">
+          <div className="relative h-14 rounded px-3">
+            <div className="absolute left-4 top-1/2 -translate-y-6 z-20 flex flex-col gap-3 ">
+              <button
+                onClick={() => setOpenHints((v) => !v)}
+                aria-label="Buka Hints"
+                className="inline-flex items-center justify-center w-10 h-10 cursor-pointer rounded-full bg-amber-100 border border-amber-300 text-stone-700 shadow hover:bg-amber-200 active:scale-95 transition"
+              >
+                <List className="w-5 h-5" />
+              </button>
+
+              <button
+                onClick={handleToolbarShare}
+                className="inline-flex items-center justify-center w-10 h-10 cursor-pointer rounded-full bg-blue-100 border border-blue-300 text-blue-700 shadow hover:bg-blue-200 active:scale-95 transition"
+              >
+                <Share2 />
+              </button>
+
+              <button
+                onClick={() => setSoundOn((v) => !v)}
+                aria-label="Toggle sound"
+                title={soundOn ? "Sound ON" : "Sound OFF"}
+                className="inline-flex items-center justify-center w-10 h-10 cursor-pointer rounded-full bg-emerald-100 border border-emerald-300 text-emerald-700 shadow hover:bg-emerald-200 active:scale-95 transition"
+              >
+                {soundOn ? "🔊" : "🔇"}
+              </button>
+            </div>
+
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span className="pixel text-white pixel-bg">
+                🔥 Streak: {streak}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between h-full">
+              <div className="w-12 sm:w-36" />
+              <button
+                onClick={resetAll}
+                className="pixel pixel-btn yellow cursor-pointer rounded px-3 py-1 text-xs md:text-base bg-white/20 hover:bg-white/30"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
         </div>
 
         <DndContext
@@ -275,8 +295,6 @@ export default function GameBoard() {
       <ShareSheet
         open={openShare}
         onClose={() => setOpenShare(false)}
-        sharing={sharing}
-        onSystem={shareSystem}
         onTwitter={shareTwitter}
         onWhatsApp={shareWhatsApp}
         onTelegram={shareTelegram}
