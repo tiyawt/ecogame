@@ -17,11 +17,11 @@ export default function Hero() {
           <h1 className="text-[clamp(28px,6vw,56px)] font-extrabold leading-tight">
             Bersih Mulai dari Rumah
           </h1>
-          <p className="mt-4 text-[clamp(14px,3vw,18px)] text-black">
+          <p className="mt-2 md:mt-4 text-[clamp(14px,3vw,18px)] text-black">
             Bantu ibu kelola sampah rumah tangga dengan cara yang lebih mudah
             dan bertanggung jawab.
           </p>
-          <div className="mt-8 flex sm:flex-row gap-4 justify-center">
+          <div className="mt-2 md:mt-5 flex sm:flex-row gap-4 justify-center">
             <button className="px-6 py-3 w-full sm:w-auto bg-[#AAC5B8] font-medium rounded hover:bg-[#dceee5] hover:cursor-pointer">
               Kirim Sampah
             </button>

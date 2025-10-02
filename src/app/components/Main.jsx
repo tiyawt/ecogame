@@ -1,4 +1,5 @@
 import React from "react";
+import CircularGallery from "@/components/CircularGallery";
 
 function Main() {
   return (
@@ -6,10 +7,23 @@ function Main() {
       className="
         relative overflow-hidden
         bg-white
-        py-16 md:py-24
+        py-16 md:py-18
       "
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-8 grid md:grid-cols-2 gap-12 items-center">
+      <div style={{ height: "300px", position: "relative" }}>
+        <h1 className="text-green-900 text-center font-bold text-2xl md:text-5xl">
+          Gallery Kami
+        </h1>
+        <div className="w-full h-56 sm:h-64 md:h-126 lg:h-[30rem] overflow-hidden">
+          <CircularGallery
+            bend={3}
+            textColor="black"
+            borderRadius={0.05}
+            scrollEase={0.02}
+          />
+        </div>
+      </div>
+      <div className="max-w-7xl md:mt-70 mx-auto px-4 md:px-8 grid md:grid-cols-2 gap-12 items-center">
         <div>
           <p className="text-[11px] tracking-[0.2em] uppercase text-green-700/70">
             Ibu Jadi Kunci Rumah Bersih, Lingkungan Sehat
