@@ -1,4 +1,8 @@
+"use client";
+import { useRouter } from "next/navigation";
+
 export default function Hero() {
+  const router = useRouter();
   return (
     <section className="relative w-full">
       <video
@@ -22,7 +26,10 @@ export default function Hero() {
             dan bertanggung jawab.
           </p>
           <div className="mt-2 md:mt-5 flex sm:flex-row gap-4 justify-center">
-            <button className="px-6 py-3 w-full sm:w-auto bg-[#AAC5B8] font-medium rounded hover:bg-[#dceee5] hover:cursor-pointer">
+            <button
+              onClick={() => router.push("/wastebank")}
+              className="px-6 py-3 w-full sm:w-auto bg-[#AAC5B8] font-medium rounded hover:bg-[#dceee5] hover:cursor-pointer"
+            >
               Kirim Sampah
             </button>
           </div>
