@@ -11,7 +11,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useWasteStore } from "@/store/wasteBankStore";
 import ShareModal from "./ShareModal";
-import MaterialSection from "./MaterialSection";
 
 const formatID = (d) =>
   new Intl.DateTimeFormat("id-ID", {
@@ -26,10 +25,11 @@ const currency = (n) =>
     maximumFractionDigits: 0,
   }).format(n || 0);
 
+// IMPORTANT: Harus sama dengan PROVIDERS di SentPage!
 const COURIERS = [
   { code: "gosend", label: "GoSend", eta: "< 1 jam sampai di mitra" },
   { code: "grab", label: "GrabExpress", eta: "< 1 jam sampai di mitra" },
-  { code: "jne", label: "JNE Express", eta: "±3 hari sampai di mitra" },
+  { code: "jne", label: "JNE", eta: "±3 hari sampai di mitra" },
   { code: "pos", label: "POS Indonesia", eta: "±3 hari sampai di mitra" },
   { code: "jnt", label: "J&T Express", eta: "±3 hari sampai di mitra" },
 ];
@@ -50,25 +50,44 @@ export default function Transaction({ tx }) {
   const createdAt = new Date(tx.createdAt);
   const distKm = Number(tx.distanceKm ?? 0);
 
-  const [courier, setCourier] = useState(() =>
-    tx.shipping?.provider
-      ? COURIERS.find((c) => c.code === tx.shipping.provider) || COURIERS[2]
-      : COURIERS[2]
-  );
-  const [resi, setResi] = useState(tx.resi || "");
+  const [courier, setCourier] = useState(() => {
+    if (tx.shipping?.mode === "self") {
+      return { code: "self", label: "Antar Sendiri", eta: "Kapan saja" };
+    }
 
+    if (tx.shipping?.provider) {
+      const found = COURIERS.find((c) => c.code === tx.shipping.provider);
+      if (found) return found;
+    }
+
+    return COURIERS[0];
+  });
+
+  const [resi, setResi] = useState(tx.resi || "");
+  const [open, setOpen] = useState(false);
+
+  // Update shipping saat courier berubah
   useEffect(() => {
+    if (courier.code === "self") return;
+
     updateTransaction?.(tx.id, {
       shipping: {
-        ...(tx.shipping || {}),
+        mode: "courier",
         provider: courier.code,
         label: courier.label,
+        eta: courier.eta,
       },
     });
-  }, [courier.code]);
+  }, [courier.code, tx.id, updateTransaction]);
 
   const handleResiBlur = () => {
     updateTransaction?.(tx.id, { resi });
+  };
+
+  const handleCourierChange = (e) => {
+    const newCourier =
+      COURIERS.find((c) => c.code === e.target.value) || COURIERS[0];
+    setCourier(newCourier);
   };
 
   const copyAllAddresses = async () => {
@@ -84,9 +103,9 @@ export default function Transaction({ tx }) {
     }
   };
 
-  const [open, setOpen] = useState(false);
-
   const share = () => setOpen(true);
+
+  const isSelfDelivery = tx.shipping?.mode === "self";
 
   return (
     <div className="mx-auto w-[92%] max-w-[820px] pb-10">
@@ -108,81 +127,82 @@ export default function Transaction({ tx }) {
             </div>
             <div className="flex-1">
               <h2 className="font-semibold text-slate-900">
-                Segera Kirim Paketmu
+                {isSelfDelivery
+                  ? "Segera Antar Paketmu"
+                  : "Segera Kirim Paketmu"}
               </h2>
               <p className="text-sm text-slate-700 mt-1">
-                Bawa paket ke agen kurir terdekat.
+                {isSelfDelivery
+                  ? "Bawa paket langsung ke mitra tujuan."
+                  : "Bawa paket ke agen kurir terdekat."}
               </p>
             </div>
           </div>
 
-          <div className="mt-4 pt-4 border-t">
-            <p className="text-sm font-medium text-slate-900">
-              Bantu kami memantau paketmu
-            </p>
+          {!isSelfDelivery && (
+            <div className="mt-4 pt-4 border-t">
+              <p className="text-sm font-medium text-slate-900">
+                Bantu kami memantau paketmu
+              </p>
 
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-sm text-black">
-                <span className="block text-slate-600 mb-1">Kurir</span>
-                <div className="relative">
-                  <select
-                    value={courier.code}
-                    onChange={(e) =>
-                      setCourier(
-                        COURIERS.find((c) => c.code === e.target.value) ||
-                          COURIERS[2]
-                      )
-                    }
-                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2 pr-9 text-sm"
-                  >
-                    {COURIERS.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.label}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
-                </div>
-              </label>
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label className="text-sm text-black">
+                  <span className="block text-slate-600 mb-1">Kurir</span>
+                  <div className="relative">
+                    <select
+                      value={courier.code}
+                      onChange={handleCourierChange}
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2 pr-9 text-sm"
+                    >
+                      {COURIERS.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
+                  </div>
+                </label>
 
-              <label className="text-sm text-black">
-                <span className="block text-slate-600 mb-1">Nomor Resi</span>
-                <input
-                  value={resi}
-                  onChange={(e) => setResi(e.target.value)}
-                  onBlur={handleResiBlur}
-                  placeholder="Masukkan Resi Pengiriman"
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
-                />
-              </label>
+                <label className="text-sm text-black">
+                  <span className="block text-slate-600 mb-1">Nomor Resi</span>
+                  <input
+                    value={resi}
+                    onChange={(e) => setResi(e.target.value)}
+                    onBlur={handleResiBlur}
+                    placeholder="Masukkan Resi Pengiriman"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                  />
+                </label>
+              </div>
+
+              <div className="mt-3 w-full flex flex-col md:flex-row gap-2">
+                <button
+                  onClick={() => router.push("/wastebank/detail/sent")}
+                  className="inline-flex w-full md:flex-1 items-center justify-center
+                 rounded-xl border border-slate-200 px-4 py-2
+                 text-sm text-white cursor-pointer bg-yellow-500 hover:bg-yellow-600"
+                >
+                  Ubah Pengiriman
+                </button>
+
+                <button
+                  onClick={() =>
+                    alert(
+                      resi
+                        ? `Tracking ${courier.label} untuk resi ${resi}`
+                        : "Isi nomor resi dulu ya."
+                    )
+                  }
+                  className="inline-flex w-full md:flex-1 items-center justify-center
+                 rounded-xl bg-cyan-500 text-white px-4 py-2
+                 text-sm font-semibold hover:bg-cyan-600 cursor-pointer"
+                >
+                  Lacak Pengiriman
+                </button>
+              </div>
             </div>
-
-            <div className="mt-3 w-full flex flex-col md:flex-row gap-2">
-              <button
-                onClick={() => router.push("/wastebank/detail/sent")}
-                className="inline-flex w-full md:flex-1 items-center justify-center
-               rounded-xl border border-slate-200 px-4 py-2
-               text-sm text-white cursor-pointer bg-yellow-500 hover:bg-yellow-600"
-              >
-                Ubah Pengiriman
-              </button>
-
-              <button
-                onClick={() =>
-                  alert(
-                    resi
-                      ? `Tracking ${courier.label} untuk resi ${resi}`
-                      : "Isi nomor resi dulu ya."
-                  )
-                }
-                className="inline-flex w-full md:flex-1 items-center justify-center
-               rounded-xl bg-cyan-500 text-white px-4 py-2
-               text-sm font-semibold hover:bg-cyan-600 cursor-pointer"
-              >
-                Lacak Pengiriman
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -207,9 +227,11 @@ export default function Transaction({ tx }) {
                 <p className="text-sm text-slate-700">
                   {tx.sender?.address || "-"}
                 </p>
-                <p className="text-sm text-slate-500">
-                  Keterangan alamat: {tx.sender?.note || "-"}
-                </p>
+                {tx.sender?.note && (
+                  <p className="text-sm text-slate-500">
+                    Keterangan alamat: {tx.sender.note}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -259,15 +281,21 @@ export default function Transaction({ tx }) {
           </h3>
           <div className="mt-2 flex items-center justify-between rounded-xl border border-slate-200 p-3">
             <div>
-              <p className="text-sm font-medium text-black">{courier.label}</p>
+              <p className="text-sm font-medium text-black">
+                {isSelfDelivery ? "Antar Sendiri" : courier.label}
+              </p>
               <p className="text-xs text-slate-600">
-                {["gosend", "grab"].includes(courier.code)
+                {isSelfDelivery
+                  ? "Kapan saja"
+                  : ["gosend", "grab"].includes(courier.code)
                   ? "< 1 jam sampai di mitra"
                   : "±3 hari sampai di mitra"}
               </p>
             </div>
             <div className="text-sm font-semibold">
-              {["gosend", "grab"].includes(courier.code)
+              {isSelfDelivery
+                ? "Gratis"
+                : ["gosend", "grab"].includes(courier.code)
                 ? currency(estimatePrice(courier.code, distKm))
                 : "Bayar di agen kurir"}
             </div>

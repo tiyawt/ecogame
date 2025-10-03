@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useWasteStore } from "@/store/wasteBankStore";
 import { MapPin, Pencil, Truck, ChevronDown, X, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -87,9 +87,11 @@ export default function SentPage() {
   } = useWasteStore();
 
   const distKm = selectedFacility ? distanceFromUser(selectedFacility) : 0;
+
   useEffect(() => {
     if (!selectedFacility) router.replace("/wastebank");
   }, [selectedFacility, router]);
+
   if (!selectedFacility) return null;
 
   const [selfDropoff, setSelfDropoff] = useState(false);
@@ -126,7 +128,11 @@ export default function SentPage() {
     }
 
     const tx = {
-      sender: { name: senderName, address, loc: userLoc },
+      sender: {
+        name: senderName,
+        address,
+        loc: userLoc,
+      },
       receiver: {
         id: selectedFacility.id,
         name: selectedFacility.name,
@@ -137,7 +143,16 @@ export default function SentPage() {
         lon: selectedFacility.lon,
       },
       distanceKm: Number(distKm?.toFixed?.(2) ?? 0),
-      shipping: { mode: "courier", provider: "gosend" }, // contoh
+      // Simpan courier yang dipilih user
+      shipping: selfDropoff
+        ? { mode: "self", provider: null, label: "Antar Sendiri" }
+        : {
+            mode: "courier",
+            provider: courier.code,
+            label: courier.label,
+            eta: courier.eta,
+            payNote: courier.payNote,
+          },
       resi: "",
     };
 
@@ -206,13 +221,15 @@ export default function SentPage() {
           <h2 className="text-sm font-semibold text-slate-900">
             JASA PENGIRIMAN
           </h2>
-          <button
-            className="text-slate-700 text-sm inline-flex items-center gap-1"
-            onClick={() => setOpenChoose(true)}
-            title="Pilih kurir lain"
-          >
-            Pilih Kurir Lainnya <ChevronDown className="h-4 w-4" />
-          </button>
+          {!selfDropoff && (
+            <button
+              className="text-slate-700 text-sm inline-flex items-center gap-1"
+              onClick={() => setOpenChoose(true)}
+              title="Pilih kurir lain"
+            >
+              Pilih Kurir Lainnya <ChevronDown className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         <div
@@ -320,7 +337,7 @@ export default function SentPage() {
                     key={p.code}
                     onClick={() => handlePick(p)}
                     className={`w-full flex items-center justify-between px-4 py-3 border-t ${
-                      active ? "bg-emerald-50" : "hover:bg-slate-50"
+                      active ? "bg-emerag-50" : "hover:bg-slate-50"
                     }`}
                   >
                     <div className="text-left">
