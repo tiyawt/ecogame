@@ -235,9 +235,9 @@ export default function GameBoard() {
               <div className="w-12 sm:w-36" />
               <button
                 onClick={resetAll}
-                className="pixel pixel-btn yellow cursor-pointer rounded px-3 py-1 text-xs md:text-base bg-white/20 hover:bg-white/30"
+                className="pixel pixel-btn blue cursor-pointer rounded px-3 py-1 text-xs md:text-base bg-white/20 hover:bg-white/30"
               >
-                Reset
+                Play!
               </button>
             </div>
           </div>
